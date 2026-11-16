@@ -1,203 +1,18 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Chisandro Investment LTD – We supply what your business needs</title>
-<meta name="description" content="Chisandro Investment LTD is a Zambian supplier. Tell us what your business needs – equipment, materials, tools, safety wear, office goods – and we find it, quote it and deliver it.">
+<meta name="description" content="Chisandro Investment LTD is a Zambian supplier. Tell us what your business needs and we find it, quote it and deliver it.">
 <link rel="preconnect" href="https://api.fontshare.com"><link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,700&display=swap" rel="stylesheet">
-<style>
-:root{
- --page:#D9DBE0;--tile:#ECEDF0;--ink:#1F232B;--soft:#4A505C;--slate:#3B4252;--deep:#2B303B;--red:#E31E24;--white:#fff;
- --m:8px;--g:8px;
- --step-small:clamp(.875rem,.85rem + .1vw,.9375rem);
- --step-body:clamp(1.0625rem,1rem + .25vw,1.1875rem);
- --step-lead:clamp(1.375rem,1.1rem + 1vw,1.75rem);
- --step-head:clamp(2.1rem,1.3rem + 3.2vw,4rem);
- --step-display:clamp(3.5rem,9.4vw,10.5rem);
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--page);color:var(--ink);font-family:"General Sans",Arial,sans-serif;font-size:var(--step-body);line-height:1.45}
-img{display:block;max-width:100%}a{color:inherit;text-decoration:none}
-:focus-visible{outline:3px solid var(--red);outline-offset:2px}
-::selection{background:var(--red);color:#fff}
-.board{padding:var(--m);display:grid;gap:var(--g)}
-.t{background:var(--tile);padding:24px;position:relative;overflow:hidden}
-.t.dark{background:var(--deep);color:#fff}.t.ink{background:var(--ink);color:#fff}.t.red{background:var(--red);color:#fff}.t.slate{background:var(--slate);color:#fff}
-.t.ph{padding:0}.t.ph img,.t.ph video{width:100%;height:100%;object-fit:cover}
-.gs{filter:grayscale(1)}
-h1,h2,h3,p{margin:0}
-h2{font-size:var(--step-head);line-height:.98;letter-spacing:-.025em;font-weight:700}
-h3{font-size:var(--step-lead);line-height:1.1;letter-spacing:-.015em;font-weight:700}
-.lead{font-size:var(--step-lead);line-height:1.2;font-weight:500;letter-spacing:-.01em}
-.small{font-size:var(--step-small)}
-.btn{display:inline-block;background:var(--red);color:#fff;font:700 var(--step-body)/1 "General Sans",Arial,sans-serif;padding:16px 26px;border:0;cursor:pointer;transition:transform .2s,background .2s}
-.btn:hover{background:#c0151b}.btn:active{transform:translateY(2px)}
-.btn.inv{background:#fff;color:var(--ink)}.btn.inv:hover{background:var(--ink);color:#fff}
-
-/* HERO */
-.hero{height:100svh;min-height:640px;grid-template-rows:60px 1fr 1fr;grid-template-columns:1fr 1fr}
-.bar{grid-column:1/-1;display:grid;grid-template-columns:60px 1fr auto;gap:var(--g)}
-.bar>*{padding:0}
-.logo{background:var(--ink);display:flex;align-items:center;justify-content:center}.logo svg{width:40px;height:40px}
-.links{background:var(--tile);display:flex;align-items:center;gap:28px;padding:0 24px;font-weight:500;font-size:var(--step-small)}
-.links a:hover{color:var(--red)}
-.act{background:var(--ink);color:#fff;display:flex;align-items:center;padding:0 24px;font-weight:700;font-size:var(--step-small)}.act:hover{background:var(--red)}
-.name{grid-row:2;display:flex;align-items:flex-end;padding:24px}
-.name h1{font-size:var(--step-display);font-weight:500;letter-spacing:-.05em;line-height:.8;margin-bottom:-.04em}
-.shutter{grid-row:2;grid-column:2}
-.shutter img{transform:scale(1.12);animation:settle 1.1s .1s cubic-bezier(.2,.7,.2,1) forwards}
-.shutter{clip-path:inset(0 0 0 100%);animation:open 1.1s .1s cubic-bezier(.2,.7,.2,1) forwards}
-@keyframes open{to{clip-path:inset(0 0 0 0)}}@keyframes settle{to{transform:scale(1)}}
-.h3{grid-row:3;grid-column:1}
-.br{grid-row:3;grid-column:2;display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
-.br .t{font-size:var(--step-lead);line-height:1.15;font-weight:500;display:flex;flex-direction:column;justify-content:space-between}
-
-/* INTRO */
-.intro{grid-template-columns:repeat(12,1fr)}
-.intro .lead{grid-column:1/-1;padding:56px 24px 40px;max-width:none}.intro .lead.t{font-size:clamp(1.375rem,1.1rem + 1vw,1.75rem)}
-.intro .c{grid-column:span 3;font-size:var(--step-small);line-height:1.5}
-.intro .c b{font-weight:700}
-.intro .c.t{font-size:var(--step-body);min-height:260px}
-.intro .lead.t{background:var(--tile)}
-
-/* FEATURES */
-.sup{grid-template-columns:1fr 1fr;gap:0;padding:0}
-.sup .l{background:var(--tile);min-height:90svh;padding:48px 32px;display:flex;flex-direction:column;justify-content:space-between}
-.zig span{display:block}.zig span:nth-child(2){text-align:right}.zig{white-space:nowrap}
-.sup .l .row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
-.sup .l p{max-width:30ch}
-.sup .r{background:var(--deep);color:#fff;display:grid;grid-template-rows:repeat(5,1fr)}
-.sup .r>div{padding:28px 32px;display:grid;grid-template-columns:5fr 4fr 3fr;gap:24px;align-items:start}
-.sup .r>div:nth-child(odd){background:#242933}
-.sup .r h3{font-size:clamp(1.4rem,1.1rem + .9vw,1.75rem)}
-.sup .r p,.sup .r ul{font-size:var(--step-small);line-height:1.5;margin:0;padding:0;list-style:none;color:#e6e8ee}
-.sup .r p{font-size:1rem}
-
-/* MOSAIC */
-.mos-wrap{padding:var(--m)}
-.mos{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--g)}
-.mos div{aspect-ratio:32/27;background-image:url(assets/kitwe-cityscape2-flickr.jpg);background-size:600% 400%;overflow:hidden;position:relative}
-.mos div.c{background:var(--slate);color:#fff;padding:16px;font-size:clamp(.95rem,1.1vw,1.15rem);line-height:1.15;font-weight:500;display:flex;align-items:flex-start;transition:background .2s}
-.mos div.c.r{background:var(--red)}.mos div.c.i{background:var(--ink)}
-.mos div.c b{font-size:clamp(1.3rem,2.4vw,2.6rem);line-height:.95;letter-spacing:-.03em}
-.mos div.c a{font-weight:700}
-.mos-m{display:none}
-
-/* HOW */
-.how{background:var(--tile);margin:0 var(--m);padding:64px 24px 24px}
-.how-top{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--g);margin-bottom:64px}
-.how-top h2{grid-column:1/6}.how-top p{grid-column:7/12}
-.acc{display:flex;height:520px;margin:0 -24px -24px}
-.pn{flex:1 1 0;min-width:72px;position:relative;overflow:hidden;cursor:pointer;color:#fff;border:0;text-align:left;font:inherit;padding:0;transition:flex-grow .45s}
-.pn.on{flex-grow:8}
-.pn:nth-child(1){background:#1F232B}.pn:nth-child(2){background:#3B4252}.pn:nth-child(3){background:#7A808C;color:#fff}.pn:nth-child(4){background:#B6BAC3;color:var(--ink)}
-.pn .nm{position:absolute;left:20px;bottom:20px;font-weight:700;font-size:20px;writing-mode:vertical-rl;transform:rotate(180deg);transform-origin:center;white-space:nowrap}
-.pn .in{position:absolute;inset:0;padding:28px;display:flex;flex-direction:column;justify-content:space-between;opacity:0;transition:opacity .3s}
-.pn:not(.on) .in{visibility:hidden}.pn.on .in{opacity:1;transition-delay:.25s}.pn.on .nm{opacity:0}
-.pn .in h3{font-size:2.5rem;letter-spacing:-.025em}
-.pn .in p{max-width:36ch;font-size:var(--step-body)}
-
-/* STATS */
-.stats{grid-template-columns:repeat(12,1fr);align-items:start;padding-top:var(--m)}
-.stats .a{grid-column:1/7;height:70vh;display:flex;flex-direction:column;justify-content:space-between}
-.stats .b{grid-column:7/10;height:44vh;margin-top:14vh;display:flex;flex-direction:column;justify-content:space-between}
-.stats .c{grid-column:10/13;height:34vh;margin-top:26vh;display:flex;flex-direction:column;justify-content:space-between;background:var(--slate);color:#fff}
-.stats .hd{grid-column:7/13;grid-row:1;align-self:start;padding:0 0 0 0;font-size:clamp(1.75rem,1.2rem + 1vw,2.25rem);font-weight:700;letter-spacing:-.02em;line-height:1;position:absolute;left:calc(50% + 4px);top:calc(var(--m) + 4px)}
-.fig{font-size:clamp(3.5rem,5.4vw,5.75rem);font-weight:700;letter-spacing:-.04em;line-height:.9}
-.stats .a{grid-row:1}.stats .b,.stats .c{grid-row:1}
-.stats{position:relative}
-
-/* CTA / LIVE */
-.cta{grid-template-columns:repeat(12,1fr)}
-.cta .l{grid-column:1/3;background:var(--ink)}
-.cta .m{grid-column:3/11;background:var(--red);color:#fff;padding:40px;display:flex;flex-direction:column;gap:20px}
-.cta .rr{grid-column:11/13;background:var(--slate)}
-.cta .l,.cta .rr{padding:0;min-height:360px}.cta .l img{width:100%;height:100%;object-fit:cover}
-.cta .m h2{font-size:clamp(2rem,1.4rem + 2vw,2.75rem)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:0;background:rgba(255,255,255,.16);color:#fff;font:500 1rem/1 "General Sans",Arial,sans-serif;padding:12px 16px;cursor:pointer;transition:background .2s,transform .15s}
-.chip:hover{background:rgba(255,255,255,.3)}.chip:active{transform:scale(.97)}
-.chip[aria-pressed=true]{background:#fff;color:var(--ink)}
-.req{display:flex;gap:8px;flex-wrap:wrap}
-.req input{flex:1 1 260px;border:0;background:#fff;color:var(--ink);font:inherit;padding:16px;min-width:0}
-.req input:focus{outline:3px solid var(--ink)}
-
-/* CONTACT */
-.contact{background:var(--slate);color:#fff;margin:var(--m);padding:48px 0 var(--m);overflow:hidden}
-.strip{display:flex;gap:8px;width:max-content;animation:drift 70s linear infinite}
-.strip img{height:150px;width:auto;object-fit:cover}
-.strip img:nth-child(3n+1){aspect-ratio:3/4}.strip img:nth-child(3n+2){aspect-ratio:1}.strip img:nth-child(3n){aspect-ratio:3/2}
-@keyframes drift{to{transform:translateX(-50%)}}
-.contact h2{margin:72px 24px 40px}
-.cbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 var(--m)}
-.cbar>div{background:#4a5164;padding:24px;min-height:96px;font-size:var(--step-body);line-height:1.3}
-.cbar b{display:block;font-size:var(--step-small);font-weight:500;opacity:.9;margin-bottom:6px}
-.cbar a:hover{text-decoration:underline}
-
-
-/* FOOTER */
-footer{background:var(--ink);color:#fff;margin:var(--m);padding:24px 24px 24px}
-.word{display:flex;gap:4px;align-items:flex-end;height:34svh;min-height:220px}
-.word span{flex:1;display:flex;align-items:flex-end;justify-content:center;font-weight:700;font-size:clamp(2.2rem,8.5vw,9rem);line-height:.8;padding-bottom:.08em;color:var(--ink);letter-spacing:-.04em}
-.word span:nth-child(3n+1){background:var(--red);height:100%}.word span:nth-child(3n+2){background:#fff;height:76%}.word span:nth-child(3n){background:#8d93a0;height:88%}
-.word span:nth-child(5){height:62%}.word span:nth-child(7){height:96%}
-.fl{display:grid;grid-template-columns:repeat(12,1fr);gap:24px;margin-top:56px;font-size:var(--step-small)}
-.fl .links2{grid-column:1/9;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.fl .links2 a{display:block;margin-bottom:6px}.fl a:hover{color:var(--red)}
-.fl .addr{grid-column:9/13}
-.last{display:flex;justify-content:space-between;align-items:center;margin-top:40px;gap:16px;flex-wrap:wrap;font-size:var(--step-small)}
-.credits{margin-top:24px;font-size:var(--step-small);line-height:1.5;color:#d4d7de}.credits a{text-decoration:underline}
-
-/* MOTION */
-.js [data-r]{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:calc(var(--i,0)*80ms)}
-.js [data-r].in{opacity:1;transform:none}
-.mos div:not(.c){transition:background-size .5s}
-.mos div:not(.c):hover{background-size:648% 432%}
-.t.ph img{transition:transform .8s}.t.ph:hover img{transform:scale(1.04)}
-@media (prefers-reduced-motion:reduce){
- .shutter,.shutter img{animation:none;clip-path:none;transform:none}.strip{animation:none}
- .js [data-r]{opacity:1;transform:none;transition:none}
-}
-
-/* PHONE */
-@media(max-width:860px){
- :root{--m:6px;--g:6px}
- .hero{height:auto;min-height:0;grid-template-columns:1fr 1fr;grid-template-rows:60px 30svh auto auto auto}
- .links{display:none}.bar{grid-template-columns:60px 1fr auto}.bar>.act:nth-child(3){grid-column:3}
- .bar::after{content:"";background:var(--tile);grid-column:2;grid-row:1}
- .name{grid-column:1/-1}.name h1{font-size:17.5vw}
- .shutter{grid-column:1/-1;grid-row:3;aspect-ratio:4/3}
- .h3{display:none}
- .br{grid-column:1/-1;grid-row:4}.br .t{aspect-ratio:1;font-size:1.15rem}
- .intro .c{grid-column:span 6}.intro .lead{padding:32px 16px}
- .sup{grid-template-columns:1fr}.sup .l{min-height:70svh}
- .sup .r>div{grid-template-columns:1fr;gap:10px}.sup .r ul{display:inline}.sup .r li{display:inline}.sup .r li:not(:last-child)::after{content:", "}
- .mos{display:none}.mos-m{display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}
- .mos-m img{grid-column:1/-1;width:100%;aspect-ratio:4/3;object-fit:cover}
- .mos-m .c{padding:16px;min-height:130px;font-weight:500;line-height:1.15;color:#fff}
- .how-top h2,.how-top p{grid-column:1/-1}.how-top{gap:16px;margin-bottom:32px}
- .acc{flex-direction:column;height:auto}
- .pn{flex:none;height:64px;min-width:0;transition:height .35s}.pn.on{height:300px}
- .pn .nm{writing-mode:horizontal-tb;transform:none;left:20px;bottom:auto;top:20px}.pn .in{padding:60px 20px 20px}
- .pn .in h3{font-size:1.5rem}.pn .in{justify-content:flex-start;gap:8px}
- .stats{display:grid;grid-template-columns:1fr 1fr;gap:var(--g)}.stats .a{grid-column:1/-1;grid-row:auto}.stats .b,.stats .c{grid-column:auto;grid-row:auto}.stats .hd{grid-row:auto}
- .stats .hd{position:static;order:-1;grid-column:1/-1;padding:16px 16px 8px}
- .stats .a{height:56vw;min-height:230px}.stats .b,.stats .c{height:42vw;min-height:180px;margin:0}
- .stats .fig{font-size:15vw}.stats .b .fig,.stats .c .fig{font-size:11vw}
- .cta{display:flex;flex-direction:column}.cta .l,.cta .rr{margin:0;min-height:120px}.cta .m{padding:24px}
- .cbar{grid-template-columns:1fr}.cbar>div{min-height:60px}
- .fl .links2{grid-column:1/-1;grid-template-columns:1fr 1fr}.fl .addr{grid-column:1/-1}
- .word{height:22svh;min-height:150px}.word span{font-size:9vw}
-}
-</style></head>
-<body>
+<link rel="stylesheet" href="assets/site.css">
+</head><body>
 <script>document.documentElement.classList.add('js')</script>
-
-<!-- HERO -->
 <header class="board hero" id="top">
- <div class="bar">
-  <a class="logo t" href="#top" aria-label="Chisandro Investment LTD – home"><svg viewBox="0 0 200 200"><path d="M148 52 A68 68 0 1 0 148 148" fill="none" stroke="#E31E24" stroke-width="22"/><path d="M54 186 L110 18 L150 176" fill="none" stroke="#1F232B" stroke-width="34" stroke-miterlimit="10"/><path d="M54 186 L110 18 L150 176" fill="none" stroke="#fff" stroke-width="18" stroke-miterlimit="10"/><path d="M74 138 L162 138" stroke="#fff" stroke-width="18"/></svg></a>
-  <nav class="links t" aria-label="Main"><a href="#about">About</a><a href="#supply">What we supply</a><a href="#how">How we work</a><a href="#contact">Contact</a><a href="#portal" title="Coming soon">Client portal</a></nav>
-  <a class="act" href="#request">Request a quote</a>
+ <div class="bar" id="bar">
+  <a class="logo t" href="index.html" aria-label="Chisandro Investment LTD – home"><svg viewBox="0 0 200 200"><path d="M148 52 A68 68 0 1 0 148 148" fill="none" stroke="#E31E24" stroke-width="22"/><path d="M54 186 L110 18 L150 176" fill="none" stroke="#1F232B" stroke-width="34" stroke-miterlimit="10"/><path d="M54 186 L110 18 L150 176" fill="none" stroke="#fff" stroke-width="18" stroke-miterlimit="10"/><path d="M74 138 L162 138" stroke="#fff" stroke-width="18"/></svg></a>
+  <button class="menubtn" id="menubtn" aria-expanded="false" aria-controls="bar">Menu</button>
+  <nav class="links t" aria-label="Main"><a href="index.html" aria-current="page">Home</a><a href="about.html">About</a><a href="products.html">What we supply</a><a href="profile.html">Company profile</a><a href="contact.html">Contact</a><a href="#portal" title="Coming soon">Client portal</a></nav>
+  <a class="act" href="contact.html#request">Request a quote</a>
  </div>
  <div class="t name"><h1>Chisandro</h1></div>
  <div class="t ph shutter"><img class="gs" src="assets/zambia-1.jpg" alt="Open-pit copper mine at Nchanga near Chingola, Zambia" width="1920" height="1280"></div>
@@ -207,7 +22,6 @@ footer{background:var(--ink);color:#fff;margin:var(--m);padding:24px 24px 24px}
   <div class="t red"><p>One call. One supplier. Every item on your list.</p><a class="small" href="#request" style="font-weight:700">Start your list →</a></div>
  </div>
 </header>
-
 <main>
 <!-- INTRO -->
 <section class="board intro" id="about" aria-label="About">
@@ -222,7 +36,7 @@ footer{background:var(--ink);color:#fff;margin:var(--m);padding:24px 24px 24px}
 <section class="board sup" id="supply" aria-label="What we supply">
  <div class="l">
   <h2 class="zig" data-r><span>A supplier for</span><span>all of it.</span></h2>
-  <div class="row"><p data-r style="--i:1">These are the places most requests come from. They are a starting point, not a limit. If your item is not here, ask.</p><a class="btn" href="#request" data-r style="--i:2">Ask for an item</a></div>
+  <div class="row"><p data-r style="--i:1">These are the places most requests come from. They are a starting point, not a limit. If your item is not here, ask.</p><a class="btn" href="products.html" data-r style="--i:2">See what we supply</a></div>
  </div>
  <div class="r">
   <div><h3>Machines &amp; equipment</h3><p>Generators, compressors, pumps, earthmoving and workshop machines, with the spares and service parts to keep them running.</p><ul><li>Generators</li><li>Pumps</li><li>Spares</li></ul></div>
@@ -293,53 +107,14 @@ footer{background:var(--ink);color:#fff;margin:var(--m);padding:24px 24px 24px}
  <p style="padding:20px 24px 0">[Opening hours: Mon–Fri 08:00–17:00. Confirm.]</p>
 </section>
 </main>
-
 <footer>
  <div class="word" aria-label="Chisandro"><span>C</span><span>H</span><span>I</span><span>S</span><span>A</span><span>N</span><span>D</span><span>R</span><span>O</span></div>
  <div class="fl">
-  <div class="links2"><div><a href="#about">About</a><a href="#supply">What we supply</a></div><div><a href="#how">How we work</a><a href="#request">Request a quote</a></div><div><a href="#contact">Contact</a><a href="#portal">Client portal</a></div><div><a href="#">Company profile</a></div></div>
-  <div class="addr">Chisandro Investment LTD<br>[Plot No., Street, Town], Zambia<br>[+260 000 000 000] · [info@yourdomain.co.zm]</div>
+  <div class="links2"><div><a href="index.html">Home</a><a href="about.html">About</a></div><div><a href="products.html">What we supply</a><a href="profile.html">Company profile</a></div><div><a href="contact.html">Contact</a><a href="contact.html#request">Request a quote</a></div><div><a href="#portal">Client portal</a></div></div>
+  <div class="addr">Chisandro Investment LTD<br>[Plot 000, Street, Town], Zambia<br>[+260 000 000 000] · [info@yourdomain.co.zm]</div>
  </div>
- <div class="last"><span>© <span id="y"></span> Chisandro Investment LTD · Reg. No. [PACRA NUMBER]</span><a class="btn" href="#top">Back to top</a></div>
- <p class="credits">Pictures: <a href="https://commons.wikimedia.org/wiki/File:Zambia_1.JPG">“Zambia 1”</a> by BlueSalo, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4615188">“Chipata (market)”</a> by Hans Hillewaert, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=22640076">“Overloaded chibuku truck”</a> by Hans Hillewaert, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=92129072">“Kitwe cityscape2”</a> by Mike Rosenberg, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=2181366">“Kitwe”</a> by Per Arne Wilson, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=116497253">“Man in a canoe on the Kafue river”</a> by Olympian Xeus, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. <a href="https://commons.wikimedia.org/wiki/File:Victoria-falls.webm">“Victoria-falls”</a> by Farai Gandiya, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>. All via Wikimedia Commons. They show Zambia and are not Chisandro's own pictures.</p>
+ <div class="last"><span>© <span class="yr"></span> Chisandro Investment LTD · Reg. No. [PACRA NUMBER]</span><a class="btn" href="#top">Back to top</a></div>
+ <p class="credits">Pictures: <a href="https://commons.wikimedia.org/wiki/File:Zambia_1.JPG">“Zambia 1”</a> by BlueSalo, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=4615188">“Chipata (market)”</a> by Hans Hillewaert, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=22640076">“Overloaded chibuku truck”</a> by Hans Hillewaert, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=92129072">“Kitwe cityscape2”</a> by Mike Rosenberg, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=2181366">“Kitwe”</a> by Per Arne Wilson, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/w/index.php?curid=116497253">“Man in a canoe on the Kafue river”</a> by Olympian Xeus, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/wiki/File:Victoria-falls.webm">“Victoria-falls”</a> by Farai Gandiya, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>. All via Wikimedia Commons. They show Zambia and are not Chisandro's own pictures.</p>
 </footer>
-
-<script>
-const EMAIL='info@yourdomain.co.zm'; // placeholder – replace with the real address
-document.getElementById('y').textContent=new Date().getFullYear();
-
-// mosaic: one photo cut across 24 tiles, 5 swapped for colour tiles
-(function(){
- const el=document.getElementById('mos'); if(!el) return;
- const sp={0:['<b>Supply, simply.</b>',''],8:['Machines to stationery.','r'],13:['Delivery across Zambia.','i'],16:['One quote for the whole list.','r'],21:['<a href="#request">Request a quote →</a>','']};
- for(let i=0;i<24;i++){
-  const d=document.createElement('div'),c=i%6,r=Math.floor(i/6);
-  if(sp[i]){d.className='c '+sp[i][1];d.innerHTML=sp[i][0]}
-  else d.style.backgroundPosition=(c/5*100)+'% '+(r/3*100)+'%';
-  el.appendChild(d);
- }
-})();
-
-// accordion
-document.querySelectorAll('.pn').forEach(p=>p.addEventListener('click',()=>{
- document.querySelectorAll('.pn').forEach(x=>{x.classList.remove('on');x.setAttribute('aria-expanded','false')});
- p.classList.add('on');p.setAttribute('aria-expanded','true');
-}));
-
-// live request builder -> opens an email with the list filled in
-const chips=document.getElementById('chips');
-chips.addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true')});
-document.getElementById('reqform').addEventListener('submit',e=>{
- e.preventDefault();
- const cats=[...chips.querySelectorAll('[aria-pressed=true]')].map(b=>b.textContent).join(', ')||'General';
- const item=document.getElementById('item').value||'(not specified)';
- const who=document.getElementById('who').value||'(not specified)';
- const body=`Hello Chisandro,\n\nI would like a quote.\n\nCategories: ${cats}\nItems: ${item}\nContact: ${who}\n\nThank you.`;
- location.href=`mailto:${EMAIL}?subject=${encodeURIComponent('Quote request')}&body=${encodeURIComponent(body)}`;
-});
-
-// entrances
-const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.15});
-document.querySelectorAll('[data-r]').forEach(n=>io.observe(n));
-</script>
+<script src="assets/site.js"></script>
 </body></html>
