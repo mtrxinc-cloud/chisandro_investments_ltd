@@ -1,7 +1,7 @@
 :root{
  --page:#D9DBE0;--tile:#ECEDF0;--ink:#1F232B;--soft:#4A505C;--slate:#3B4252;--deep:#2B303B;--red:#E31E24;--white:#fff;
  --m:8px;--g:8px;
- --step-small:clamp(.875rem,.85rem + .1vw,.9375rem);
+ --step-small:clamp(1rem,.95rem + .1vw,1.0625rem);
  --step-body:clamp(1.0625rem,1rem + .25vw,1.1875rem);
  --step-lead:clamp(1.375rem,1.1rem + 1vw,1.75rem);
  --step-head:clamp(2.1rem,1.3rem + 3.2vw,4rem);
@@ -227,3 +227,14 @@ footer{background:var(--ink);color:#fff;margin:var(--m);padding:24px 24px 24px}
 @media(max-width:860px){main>.board+.board{margin-top:28px}}
 .sec .b h3{font-size:var(--step-lead)}
 @media(max-width:860px){.menubtn{display:block}}
+
+.ed-wrap{padding:0;overflow:hidden;background:#e4e7ec}
+.ed{display:block;width:100%;height:78vh;min-height:520px;border:0}
+.ed-steps{display:flex;align-items:center;height:100%;padding:clamp(20px,3vw,40px);color:#fff}
+.ed-steps ol{margin:0;padding-left:1.2em;display:grid;gap:12px;font-size:var(--step-body);line-height:1.5}
+
+.logo3d{position:relative;padding:0;overflow:hidden;min-height:clamp(320px,46vw,520px)}
+.logo3d iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.logo3d .cap{position:absolute;left:clamp(16px,3vw,32px);bottom:clamp(14px,2.5vw,28px);margin:0;color:#fff;font-weight:700;font-size:var(--step-lead);line-height:1.3;pointer-events:none}
+.logo3d .cap span{display:block;font-weight:400;font-size:var(--step-body);max-width:34ch;margin-top:6px;opacity:.85}
+.logo3d .cap a{color:#fff;pointer-events:auto;text-decoration:underline}

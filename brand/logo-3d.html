@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chisandro AC – 3D Logo Editor</title>
+<style>
+html,body{margin:0;height:100%;font-family:system-ui,Segoe UI,Arial,sans-serif;background:#eceae4;color:#2B303B}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#ui{position:fixed;top:12px;left:12px;width:262px;background:rgba(255,255,255,.95);border-radius:10px;padding:12px 14px;box-shadow:0 2px 14px rgba(0,0,0,.15);font-size:13px;max-height:calc(100% - 24px);overflow:auto}
+#ui h1{font-size:14px;margin:0 0 6px}
+#ui details{border-top:1px solid #e3e3e3;padding:6px 0}
+#ui summary{font-weight:700;cursor:pointer;padding:4px 0}
+#ui label{display:flex;justify-content:space-between;align-items:center;margin:6px 0;gap:8px}
+#ui input[type=color]{width:44px;height:24px;border:0;padding:0;background:none}
+#ui select{width:140px}#ui input[type=range]{width:120px}
+#ui button{margin-top:6px;width:100%;padding:7px;border:0;border-radius:6px;background:#3B4252;color:#fff;font-weight:600;cursor:pointer}
+#ui button.red{background:#E31E24}#ui button.grey{background:#6b7280}
+#ui .two{display:flex;gap:6px}#ui .two button{width:50%}
+#tools{position:fixed;top:12px;right:12px;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.95);padding:6px 8px;border-radius:10px;box-shadow:0 2px 14px rgba(0,0,0,.15);font-size:12px}
+#tools button{padding:6px 10px;border:0;border-radius:6px;background:#e5e7eb;font-weight:600;cursor:pointer}#tools button.on{background:#3B4252;color:#fff}
+#hint{position:fixed;bottom:10px;left:0;right:0;text-align:center;font-size:12px;color:#666;pointer-events:none}
+</style></head><body>
+<canvas id="c"></canvas>
+<div id="ui">
+<h1>Chisandro AC – 3D editor <button id="hide" style="width:auto;padding:2px 8px;margin:0 0 0 6px;float:right;font-size:11px">Hide</button></h1>
+<details open><summary>Templates</summary>
+<label>Template <select id="tplSel"></select></label>
+<div class="two"><button id="tplApply">Apply</button><button id="tplSave" class="grey">Save as…</button></div>
+<div class="two"><button id="tplExport" class="grey">Export file</button><button id="tplImport" class="grey">Import file</button></div>
+<input type="file" id="tplFile" accept=".json,application/json" hidden>
+</details>
+<div id="letters"></div>
+<details><summary>Scene</summary>
+<label>Background <input type="color" id="bg" value="#eceae4"></label>
+<label>Shadow <input type="range" id="shad" min="0" max="50" value="16"></label>
+<label>Spin <input type="checkbox" id="spin"></label>
+<button id="snap">Save picture (PNG)</button>
+<button id="svgC" class="grey">Export flat SVG</button>
+<button id="svgW" class="grey">Export flat SVG (white A, for dark)</button>
+<button id="rst" class="red">Reset everything</button>
+</details>
+</div>
+<div id="tools"><span id="selname"></span><button data-t="move" class="on">Move</button><button data-t="stretch">Stretch</button><button data-t="rotate">Rotate</button></div>
+<div id="hint">Click a letter, then drag it (Move / Stretch / Rotate tools above) · arrow keys nudge · drag empty space to orbit · scroll to zoom</div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {SVGLoader} from 'three/addons/loaders/SVGLoader.js';
+
+const A_PATH="M 775.81955,716.42715 C 698.46466,703.93404 632.58892,641.40036 558.31828,509.96032 c -5.12786,-9.075 -9.88654,-17.42857 -10.57485,-18.56349 -1.25135,-2.06329 -1.25283,-2.06316 -14.39615,1.23399 -49.59731,12.44202 -111.99165,11.43238 -171.20642,-2.77039 l -12.65279,-3.0348 5.76192,-12.18265 c 11.69632,-24.72999 13.99491,-28.83237 15.8325,-28.25691 20.80708,6.51596 73.04847,12.52501 96.15875,11.06063 21.57009,-1.3668 56.05241,-6.60195 56.05241,-8.50996 0,-0.38118 -8.70317,-15.94431 -19.34037,-34.58474 -10.63721,-18.64042 -31.44294,-55.15418 -46.23496,-81.14168 -14.79202,-25.9875 -27.23886,-47.25 -27.65963,-47.25 -0.42077,0 -0.76504,0.38732 -0.76504,0.86072 0,0.47339 -8.15014,17.46089 -18.11143,37.75 -9.96129,20.2891 -27.46375,56.01428 -38.89435,79.38928 -11.4306,23.375 -28.29812,57.8 -37.48337,76.5 -9.18525,18.7 -32.13762,65.725 -51.00526,104.5 -18.86764,38.775 -40.39442,82.9875 -47.83729,98.25 l -13.53249,27.75 h -27.15124 c -15.39326,0 -27.00688,-0.3844 -26.8179,-0.88764 1.24499,-3.31533 260.43153,-522.11236 260.84284,-522.11236 0.41416,0 104.16432,180.9675 133.56898,232.97935 40.6724,71.94255 69.84128,121.69475 82.97118,141.52065 41.56791,62.76676 89.0575,100.57636 138.37413,110.16878 10.04837,1.95447 30.55322,2.18057 39.75669,0.43837 18.49431,-3.50093 35.13777,-11.65665 51.0462,-25.01394 l 7.09253,-5.95514 15.27428,15.55481 15.2743,15.55481 -5.3114,4.62616 c -23.20201,20.20863 -44.82544,31.43781 -71.79035,37.28117 -12.84264,2.78303 -46.10782,3.51349 -59.74015,1.31181 z", T_PATH="M 598.40409,450.96032 c -6.95368,-11.88107 -14.02176,-24.18702 -24.469,-42.60198 l -9.70234,-17.10199 2.64569,-8.39801 c 12.41749,-39.41594 33.59708,-73.5395 63.59607,-102.46302 38.67589,-37.28935 82.28697,-57.71326 131.15527,-61.42256 42.725,-3.243 84.55372,8.57714 116.05981,32.79669 6.75634,5.19377 18.60406,16.08676 18.60406,17.10488 0,0.69401 -29.42294,27.05312 -31.78134,28.47191 -0.82632,0.49712 -3.84475,-1.4079 -8.5,-5.3646 -17.30722,-14.71016 -37.39191,-24.32422 -58.71866,-28.10722 -10.43102,-1.85029 -32.377,-1.60749 -44,0.48678 -54.98512,9.90743 -107.31246,53.90537 -132.5397,111.4422 -10.59388,24.1619 -16.06706,46.47374 -17.33241,70.65692 l -0.62789,12 z";
+const $=id=>document.getElementById(id);
+const QS=new URLSearchParams(location.search),VIEW=QS.has('view');
+const cv=$('c');
+const renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.localClippingEnabled=true;
+const scene=new THREE.Scene();
+const pm=new THREE.PMREMGenerator(renderer);
+scene.environment=pm.fromScene(new RoomEnvironment(),0.04).texture;scene.environmentIntensity=.2;
+const cam=new THREE.PerspectiveCamera(35,1,0.1,100);cam.position.set(0,0,14);
+const orbit=new OrbitControls(cam,cv);orbit.enableDamping=true;
+const sun=new THREE.DirectionalLight(0xffffff,1.0);sun.position.set(-3,5,10);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-12,right:12,top:10,bottom:-10});
+scene.add(sun);scene.add(new THREE.AmbientLight(0xffffff,.25));
+const wall=new THREE.Mesh(new THREE.PlaneGeometry(90,60),new THREE.ShadowMaterial({opacity:.16}));
+wall.position.z=-.5;wall.receiveShadow=true;scene.add(wall);
+
+function brushed(){const c=document.createElement('canvas');c.width=512;c.height=512;const g=c.getContext('2d');
+ g.fillStyle='#888';g.fillRect(0,0,512,512);
+ for(let i=0;i<4000;i++){const y=Math.random()*512,v=100+Math.random()*100|0;g.fillStyle=`rgba(${v},${v},${v},.35)`;g.fillRect(0,y,512,1+Math.random()*1.5)}
+ const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;return t}
+const brush=brushed();
+const FIN={matte:{metalness:0,roughness:.75,clearcoat:0},brushed:{metalness:1,roughness:.45,clearcoat:0,map:brush},
+ gloss:{metalness:0,roughness:.12,clearcoat:1},gold:{metalness:1,roughness:.18,clearcoat:0}};
+const FINNAMES={matte:'Matte paint',brushed:'Brushed metal',gloss:'Gloss',gold:'Polished metal'};
+
+const CX=520,CY=460,S=12.6/720;
+const toW=(x,y)=>new THREE.Vector3((x-CX)*S,-(y-CY)*S,0);
+const localPlanes=[],planesRed=[],planesGrey=[];
+function setRegion(R){
+ localPlanes.length=planesRed.length=planesGrey.length=0;
+ if(!R)return;
+ const mid=toW(R.reduce((s,p)=>s+p[0],0)/R.length,R.reduce((s,p)=>s+p[1],0)/R.length);
+ for(let i=0;i<R.length;i++){const a=toW(...R[i]),b=toW(...R[(i+1)%R.length]);
+  const e=b.clone().sub(a);const n=new THREE.Vector3(-e.y,e.x,0).normalize();
+  if(n.dot(mid.clone().sub(a))<0)n.negate();
+  const pl=new THREE.Plane().setFromNormalAndCoplanarPoint(n,a);
+  localPlanes.push(pl);planesRed.push(pl.clone());planesGrey.push(pl.clone())}}
+
+// ---- outline generator: centre-line + width -> filled path ----
+function ribbonPath(pts,w,o={}){
+ const cap=o.cap||'butt',r=o.r||0;let P=pts.map(p=>p.slice());
+ if(r>0&&P.length>2){const Q=[P[0]];
+  for(let i=1;i<P.length-1;i++){const a=P[i-1],b=P[i],c=P[i+1];
+   const la=Math.hypot(b[0]-a[0],b[1]-a[1]),lc=Math.hypot(c[0]-b[0],c[1]-b[1]);
+   const ra=Math.min(r,la/2),rc=Math.min(r,lc/2);
+   const p0=[b[0]+(a[0]-b[0])*ra/la,b[1]+(a[1]-b[1])*ra/la],p2=[b[0]+(c[0]-b[0])*rc/lc,b[1]+(c[1]-b[1])*rc/lc];
+   for(let k=0;k<=8;k++){const t=k/8,u=1-t;Q.push([u*u*p0[0]+2*u*t*b[0]+t*t*p2[0],u*u*p0[1]+2*u*t*b[1]+t*t*p2[1]])}}
+  Q.push(P[P.length-1]);P=Q}
+ const n=P.length,seg=i=>{const dx=P[i+1][0]-P[i][0],dy=P[i+1][1]-P[i][1],l=Math.hypot(dx,dy)||1;return[dx/l,dy/l]};
+ if(cap==='square'){const [dx,dy]=seg(0),[ex,ey]=seg(n-2);
+  P[0]=[P[0][0]-dx*w/2,P[0][1]-dy*w/2];P[n-1]=[P[n-1][0]+ex*w/2,P[n-1][1]+ey*w/2]}
+ const L=[],R=[];
+ for(let i=0;i<n;i++){let nx,ny;const nm=s=>[-s[1],s[0]];
+  if(i===0)[nx,ny]=nm(seg(0));else if(i===n-1)[nx,ny]=nm(seg(n-2));
+  else{const a=nm(seg(i-1)),b=nm(seg(i));let mx=a[0]+b[0],my=a[1]+b[1];const ml=Math.hypot(mx,my)||1;mx/=ml;my/=ml;
+   const k=Math.min(1/Math.max(mx*a[0]+my*a[1],.25),4);nx=mx*k;ny=my*k}
+  L.push([P[i][0]+nx*w/2,P[i][1]+ny*w/2]);R.push([P[i][0]-nx*w/2,P[i][1]-ny*w/2])}
+ const capPts=(c,dir,nx,ny)=>{const out=[];for(let k=1;k<8;k++){const a=Math.PI*k/8;
+   out.push([c[0]+(nx*Math.cos(a)+dir[0]*Math.sin(a))*w/2,c[1]+(ny*Math.cos(a)+dir[1]*Math.sin(a))*w/2])}return out};
+ let poly=L.slice();
+ if(cap==='round'){const [ex,ey]=seg(n-2);poly=poly.concat(capPts(P[n-1],[ex,ey],-ey,ex))}
+ poly=poly.concat(R.slice().reverse());
+ if(cap==='round'){const [dx,dy]=seg(0);poly=poly.concat(capPts(P[0],[-dx,-dy],dy,-dx))}
+ return 'M'+poly.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L')+' Z'}
+const arcPts=(cx,cy,rad,a0,a1,n=48)=>{const o=[];for(let i=0;i<=n;i++){const a=(a0+(a1-a0)*i/n)*Math.PI/180;o.push([cx+rad*Math.cos(a),cy-rad*Math.sin(a)])}return o};
+const rp=(pts,w,o)=>ribbonPath(pts,w,o);
+
+// ---- shape library: each letter design is swappable ----
+const REGION=[[338,506],[372,436],[514.3,436],[554.8,506]];
+const LIB={
+ A:[
+  {id:'sweep',name:'Sweeping-leg A (current logo)',d:A_PATH,bar:REGION},
+  {id:'a-classic',name:'Classic A, bar',fit:true,mk:k=>({d:rp([[6,100],[50,0],[94,100]],9*k),accent:rp([[24,66],[76,66]],8*k)})},
+  {id:'a-rounded',name:'Rounded A, bar',fit:true,mk:k=>({d:rp([[6,100],[50,0],[94,100]],9*k,{cap:'round',r:6}),accent:rp([[24,66],[76,66]],8*k,{cap:'round'})})},
+  {id:'a-bold',name:'Bold A, flat bar',fit:true,mk:k=>({d:rp([[12,100],[50,8],[88,100]],20*k,{cap:'square'}),accent:rp([[28,68],[72,68]],14*k)})},
+  {id:'a-flared',name:'Flared A, bar',fit:true,d:'M0 100 L43 0 L57 0 L100 100 L80 100 L50 22 L20 100 Z',accent:rp([[27,70],[73,70]],8)},
+  {id:'a-open',name:'Open A (no bar)',fit:true,mk:k=>({d:rp([[6,100],[50,0],[94,100]],9*k,{r:3})})}],
+ C:[
+  {id:'arc',name:'Top-arc C (current logo)',d:T_PATH},
+  {id:'c-full',name:'Full C',fit:true,mk:k=>({d:rp(arcPts(50,50,46,38,322),9*k)})},
+  {id:'c-round',name:'Round-end C',fit:true,mk:k=>({d:rp(arcPts(50,50,46,38,322),9*k,{cap:'round'})})},
+  {id:'c-wide',name:'Wide-open C',fit:true,mk:k=>({d:rp(arcPts(50,50,46,62,298),9*k)})},
+  {id:'c-split',name:'Split C',fit:true,mk:k=>({d:rp(arcPts(50,50,46,48,172),9*k)+' '+rp(arcPts(50,50,46,188,312),9*k)})},
+  {id:'c-square',name:'Squared C',fit:true,mk:k=>({d:rp([[96,12],[10,12],[10,88],[96,88]],9*k,{r:14})})}]};
+
+// ---- state / defaults / templates ----
+const DEF={
+ A:{design:'sweep',wt:0,col:'#3B4252',acc:'#E31E24',fin:'matte',depth:28,bevel:1,x:0,y:0,s:100,sx:100,sy:100,r:0},
+ C:{design:'arc',wt:0,col:'#E31E24',fin:'matte',depth:28,bevel:1,x:0,y:0,s:100,sx:100,sy:100,r:0},
+ bg:'#eceae4',shad:16};
+const clone=o=>JSON.parse(JSON.stringify(o));
+const merge=(b,o)=>{const r=clone(b);for(const k in o){if(o[k]&&typeof o[k]==='object')r[k]=Object.assign(r[k]||{},o[k]);else r[k]=o[k]}return r};
+const BUILTIN={
+ 'Current logo':{},
+ 'Classic slate & red':{A:{design:'a-classic'},C:{design:'c-full',col:'#E31E24'}},
+ 'Rounded & friendly':{A:{design:'a-rounded',fin:'gloss'},C:{design:'c-round',fin:'gloss'}},
+ 'Bold industrial':{A:{design:'a-bold',col:'#1f2430',depth:50},C:{design:'c-square',col:'#E31E24',depth:50},bg:'#d9d6cd'},
+ 'Gold on night':{A:{design:'a-flared',col:'#c9a227',acc:'#c9a227',fin:'gold'},C:{design:'c-wide',col:'#c9a227',fin:'gold'},bg:'#1c1f27',shad:0},
+ 'Open & split':{A:{design:'a-open',col:'#3B4252'},C:{design:'c-split',col:'#E31E24'}}};
+const LS='chisandro-ac-templates';
+const loadSaved=()=>{try{return JSON.parse(localStorage.getItem(LS)||'{}')}catch(e){return {}}};
+const storeSaved=o=>{try{localStorage.setItem(LS,JSON.stringify(o));return true}catch(e){return false}};
+
+// ---- UI built from one field spec per letter ----
+const FIELDS=[['design','Design','select'],['wt','Weight %','range',-40,100,1],['col','Colour','color'],['acc','Bar colour','color','A'],['fin','Finish','fin'],
+ ['depth','Depth','range',5,120,1],['bevel','Bevel','range',0,6,.5],['x','Move left/right','range',-700,700,1],['y','Move up/down','range',-500,500,1],
+ ['s','Size %','range',20,300,1],['sx','Stretch width %','range',20,400,1],['sy','Stretch height %','range',20,400,1],['r','Rotate °','range',-180,180,1]];
+const CTL={A:{},C:{}};
+for(const L of ['A','C']){
+ const det=document.createElement('details');det.open=false;
+ det.innerHTML=`<summary>Letter ${L}</summary>`;
+ for(const [key,label,type,a,b,c] of FIELDS){
+  if(type==='color'&&key==='acc'&&L!=='A')continue;
+  const lab=document.createElement('label');lab.append(label+' ');
+  let el;
+  if(type==='select'||type==='fin'){el=document.createElement('select');
+   if(type==='fin')for(const k in FINNAMES){const o=document.createElement('option');o.value=k;o.textContent=FINNAMES[k];el.appendChild(o)}}
+  else{el=document.createElement('input');el.type=type;
+   if(type==='range'){el.min=a;el.max=b;el.step=c}}
+  lab.appendChild(el);det.appendChild(lab);CTL[L][key]=el}
+ const row=document.createElement('div');row.className='two';
+ row.innerHTML=`<button class="grey" id="imp${L}">Import ${L} (SVG)</button>`;det.appendChild(row);
+ $('letters').appendChild(det)}
+const fileIn=document.createElement('input');fileIn.type='file';fileIn.accept='.svg,image/svg+xml';fileIn.hidden=true;document.body.appendChild(fileIn);
+
+function fillDesigns(){for(const L of ['A','C']){const el=CTL[L].design,v=el.value;el.innerHTML='';
+ LIB[L].forEach(x=>{const o=document.createElement('option');o.value=x.id;o.textContent=x.name;el.appendChild(o)});
+ if([...el.options].some(o=>o.value===v))el.value=v}}
+function getState(){const st={A:{},C:{},bg:$('bg').value,shad:+$('shad').value};
+ for(const L of ['A','C'])for(const k in CTL[L]){const e=CTL[L][k];st[L][k]=e.type==='range'?+e.value:e.value}
+ st.custom={A:LIB.A.filter(x=>x.custom&&x.id===st.A.design),C:LIB.C.filter(x=>x.custom&&x.id===st.C.design)};return st}
+function setState(st,rebuild=true){
+ for(const L of ['A','C'])(st.custom&&st.custom[L]||[]).forEach(x=>{if(!LIB[L].some(y=>y.id===x.id))LIB[L].push(x)});
+ fillDesigns();
+ for(const L of ['A','C'])for(const k in CTL[L])if(st[L][k]!==undefined)CTL[L][k].value=st[L][k];
+ $('bg').value=st.bg;$('shad').value=st.shad;
+ if(rebuild){build();paint()}}
+
+// ---- geometry ----
+const group=new THREE.Group();scene.add(group);
+const loader=new SVGLoader();
+const shapesOf=d=>loader.parse(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`).paths.flatMap(p=>SVGLoader.createShapes(p));
+const pick=(L,id)=>LIB[L].find(x=>x.id===id)||LIB[L][0];
+const shapeCache=new Map();
+const cached=(key,fn)=>{if(!shapeCache.has(key))shapeCache.set(key,fn());return shapeCache.get(key)};
+const shapesFor=(key,d)=>cached(key,()=>shapesOf(d));
+// move a polygon outward (delta>0) or inward (delta<0) along its edge normals, with a mitre limit
+function offsetPoly(pts,delta){
+ const P=pts.filter((p,i)=>i===0||Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y)>1e-6);
+ if(P.length>2&&Math.hypot(P[0].x-P[P.length-1].x,P[0].y-P[P.length-1].y)<1e-6)P.pop();
+ const n=P.length;let area=0;for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n];area+=a.x*b.y-b.x*a.y}
+ const sg=area>0?1:-1,N=[];
+ for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;N.push([sg*dy/l,-sg*dx/l])}
+ return P.map((p,i)=>{const a=N[(i+n-1)%n],b=N[i];let mx=a[0]+b[0],my=a[1]+b[1];const ml=Math.hypot(mx,my);
+  if(ml<1e-6)return new THREE.Vector2(p.x+b[0]*delta,p.y+b[1]*delta);
+  mx/=ml;my/=ml;const c=Math.max(mx*b[0]+my*b[1],.33);
+  return new THREE.Vector2(p.x+mx*delta/c,p.y+my*delta/c)})}
+function offsetShapes(shapes,delta){
+ return shapes.map(s=>{const e=s.extractPoints(24),sh=new THREE.Shape(offsetPoly(e.shape,delta));
+  e.holes.forEach(h=>sh.holes.push(new THREE.Path(offsetPoly(h,-delta))));return sh})}
+function ptsBBox(shapes){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+ for(const s of shapes)for(const p of s.extractPoints(12).shape){x0=Math.min(x0,p.x);y0=Math.min(y0,p.y);x1=Math.max(x1,p.x);y1=Math.max(y1,p.y)}
+ return {x0,y0,x1,y1}}
+// shapes of a design at a given weight (wt = percent change). Generated designs rebuild; traced ones are offset.
+function designShapes(dsn,wt){
+ if(dsn.mk){const k=1+wt/100,o=dsn.mk(k);
+  return {main:shapesFor(dsn.id+'@'+k,o.d),accent:o.accent?shapesFor(dsn.id+'@'+k+'#a',o.accent):null}}
+ const base=shapesFor(dsn.id,dsn.d),acc=dsn.accent?shapesFor(dsn.id+'#acc',dsn.accent):null;
+ if(!wt)return {main:base,accent:acc};
+ const bb=ptsBBox(base),delta=wt/100*0.045*(bb.y1-bb.y0);
+ return {main:cached(dsn.id+'~'+wt,()=>offsetShapes(base,delta)),accent:acc?cached(dsn.id+'#a~'+wt,()=>offsetShapes(acc,delta)):null}}
+function fitParams(dsn,L,main){
+ if(!dsn.fit)return null;
+ const bb=ptsBBox(main),h=bb.y1-bb.y0||1;
+ return {k:(L==='A'?520:400)/h,mx:(bb.x0+bb.x1)/2,my:(bb.y0+bb.y1)/2,ox:CX+(L==='A'?-150:205)}}
+const rawGeo=(shapes,d,bv)=>new THREE.ExtrudeGeometry(shapes,{depth:d,bevelEnabled:bv>0,bevelThickness:bv,bevelSize:bv,bevelSegments:2,curveSegments:14});
+function finish(g){
+ g.translate(-CX,-CY,0);g.scale(S,-S,S);
+ const P=g.attributes.position,U=g.attributes.uv;
+ for(let i=0;i<P.count;i+=3){for(const at of [P,U]){if(!at)continue;const k=at.itemSize;
+  for(let c=0;c<k;c++){const a=at.array[(i+1)*k+c];at.array[(i+1)*k+c]=at.array[(i+2)*k+c];at.array[(i+2)*k+c]=a}}}
+ g.computeVertexNormals();return g}
+function geosFor(dsn,L,d,bv,wt){
+ const sh=designShapes(dsn,wt),main=rawGeo(sh.main,d,bv),acc=sh.accent?rawGeo(sh.accent,d,bv):null,fp=fitParams(dsn,L,sh.main);
+ if(fp)for(const g of [main,acc]){if(!g)continue;g.translate(-fp.mx,-fp.my,0);g.scale(fp.k,fp.k,1);g.translate(fp.ox,CY,0)}
+ return {main:finish(main),accent:acc?finish(acc):null}}
+
+// ---- flat 2D export of exactly what is on screen ----
+function flat(L,st){
+ const s=st[L],dsn=pick(L,s.design),sh=designShapes(dsn,s.wt),fp=fitParams(dsn,L,sh.main);
+ const fit=p=>fp?[(p.x-fp.mx)*fp.k+fp.ox,(p.y-fp.my)*fp.k+CY]:[p.x,p.y];
+ const all=[];
+ // pivot = centre of the fitted main outline
+ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+ for(const sp of sh.main)for(const p of sp.extractPoints(12).shape){const q=fit(p);x0=Math.min(x0,q[0]);y0=Math.min(y0,q[1]);x1=Math.max(x1,q[0]);y1=Math.max(y1,q[1])}
+ const pv=[(x0+x1)/2,(y0+y1)/2],a=s.r*Math.PI/180,cs=Math.cos(a),sn=Math.sin(a),scx=s.s/100*s.sx/100,scy=s.s/100*s.sy/100;
+ const T=q=>{const dx=(q[0]-pv[0])*scx,dy=(q[1]-pv[1])*scy;const r=[pv[0]+dx*cs-dy*sn+s.x,pv[1]+dx*sn+dy*cs-s.y];all.push(r);return r};
+ const f=n=>n.toFixed(2);
+ const path=shapes=>shapes.map(sp=>{const e=sp.extractPoints(30);
+  return [e.shape,...e.holes].map(c=>'M'+c.map(p=>{const r=T(fit(p));return f(r[0])+' '+f(r[1])}).join(' L')+' Z').join(' ')}).join(' ');
+ const out={main:path(sh.main),accent:sh.accent?path(sh.accent):null,clip:null};
+ if(dsn.bar)out.clip=dsn.bar.map(p=>{const r=T(p);return f(r[0])+','+f(r[1])}).join(' ');
+ out.pts=all;return out}
+function buildSVG(st,whiteA){
+ const A=flat('A',st),C=flat('C',st),pts=A.pts.concat(C.pts);
+ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const p of pts){x0=Math.min(x0,p[0]);y0=Math.min(y0,p[1]);x1=Math.max(x1,p[0]);y1=Math.max(y1,p[1])}
+ const pad=Math.max(x1-x0,y1-y0)*.04;x0-=pad;y0-=pad;x1+=pad;y1+=pad;
+ const colA=whiteA?'#FFFFFF':st.A.col;
+ let b=`<path d="${A.main}" fill="${colA}" fill-rule="evenodd"/>`;
+ if(A.clip)b+=`<path d="${A.main}" fill="${st.A.acc}" fill-rule="evenodd" clip-path="url(#bar)"/>`;
+ if(A.accent)b+=`<path d="${A.accent}" fill="${st.A.acc}" fill-rule="evenodd"/>`;
+ b+=`<path d="${C.main}" fill="${st.C.col}" fill-rule="evenodd"/>`;
+ const defs=A.clip?`<defs><clipPath id="bar"><polygon points="${A.clip}"/></clipPath></defs>`:'';
+ const w=Math.round(x1-x0),h=Math.round(y1-y0);
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0.toFixed(1)} ${y0.toFixed(1)} ${w} ${h}" width="${w}" height="${h}">${defs}${b}</svg>`}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
+
+const mk=()=>new THREE.MeshPhysicalMaterial({side:THREE.DoubleSide});
+const matA=mk(),matBar=mk(),matAcc=mk(),matC=mk();
+matA.clippingPlanes=planesGrey;matA.clipIntersection=true;matBar.clippingPlanes=planesRed;
+const LET={A:{grp:new THREE.Group(),c:new THREE.Vector3(),clipMesh:null},C:{grp:new THREE.Group(),c:new THREE.Vector3()}};
+group.add(LET.A.grp,LET.C.grp);
+
+function build(){
+ const st=getState();
+ for(const L of ['A','C']){const lt=LET[L];
+  lt.grp.children.slice().forEach(m=>{m.geometry.dispose();lt.grp.remove(m)});
+  const s=st[L],dsn=pick(L,s.design);
+  if(L==='A')setRegion(dsn.bar||null);
+  const g=geosFor(dsn,L,s.depth,s.bevel,s.wt);
+  g.main.computeBoundingBox();g.main.boundingBox.getCenter(lt.c);lt.c.z=0;
+  const add=(geo,mat)=>{const m=new THREE.Mesh(geo,mat);m.position.set(-lt.c.x,-lt.c.y,0);m.castShadow=m.receiveShadow=true;lt.grp.add(m);return m};
+  if(L==='A'){
+   matA.clippingPlanes=dsn.bar?planesGrey:null;
+   lt.clipMesh=add(g.main,matA);
+   if(dsn.bar)add(g.main,matBar);
+   if(g.accent)add(g.accent,matAcc)}
+  else add(g.main,matC)}
+ layout()}
+function layout(){
+ const st=getState();
+ for(const L of ['A','C']){const s=st[L],lt=LET[L];
+  lt.grp.position.set(lt.c.x+s.x*S,lt.c.y+s.y*S,0);
+  lt.grp.scale.set(s.s/100*s.sx/100,s.s/100*s.sy/100,s.s/100);lt.grp.rotation.z=-s.r*Math.PI/180}}
+function paint(){
+ const st=getState();
+ const set=(m,c,f)=>{const p=FIN[f];m.color.set(c);m.metalness=p.metalness;m.roughness=p.roughness;m.clearcoat=p.clearcoat;m.clearcoatRoughness=.1;m.map=p.map||null;m.needsUpdate=true};
+ set(matA,st.A.col,st.A.fin);set(matBar,st.A.acc,st.A.fin);set(matAcc,st.A.acc,st.A.fin);set(matC,st.C.col,st.C.fin);
+ scene.background=new THREE.Color(st.bg);document.body.style.background=st.bg;
+ sun.shadow.radius=st.shad;wall.material.opacity=st.shad>0?.18:0}
+
+// ---- wiring ----
+for(const L of ['A','C'])for(const k in CTL[L]){const e=CTL[L][k];
+ const fn=['design','wt','depth','bevel'].includes(k)?build:['x','y','s','sx','sy','r'].includes(k)?layout:paint;
+ e.addEventListener('input',fn)}
+$('bg').addEventListener('input',paint);$('shad').addEventListener('input',paint);
+let importFor='A';
+for(const L of ['A','C'])$('imp'+L).onclick=()=>{importFor=L;fileIn.click()};
+fileIn.onchange=async()=>{const f=fileIn.files[0];if(!f)return;
+ const doc=new DOMParser().parseFromString(await f.text(),'image/svg+xml');
+ const d=[...doc.querySelectorAll('path')].map(x=>x.getAttribute('d')).filter(Boolean).join(' ');
+ if(!d){alert('No path found in that SVG. Convert shapes/strokes to a path first (Inkscape: Path > Object to Path).');return}
+ const id='imp'+Date.now();LIB[importFor].push({id,name:'Imported: '+f.name,d,fit:true,custom:true});
+ fillDesigns();CTL[importFor].design.value=id;build();paint();fileIn.value=''};
+
+// templates
+function fillTemplates(sel){const el=$('tplSel');el.innerHTML='';
+ const add=(grp,names)=>{const g=document.createElement('optgroup');g.label=grp;names.forEach(n=>{const o=document.createElement('option');o.value=grp+'|'+n;o.textContent=n;g.appendChild(o)});if(names.length)el.appendChild(g)};
+ add('Built-in',Object.keys(BUILTIN));add('Saved',Object.keys(loadSaved()));if(sel)el.value=sel}
+function applyTemplate(key){const [grp,...rest]=key.split('|'),name=rest.join('|');
+ const src=grp==='Built-in'?BUILTIN[name]:loadSaved()[name];if(!src)return;
+ setState(merge(DEF,src))}
+$('tplApply').onclick=()=>applyTemplate($('tplSel').value);
+$('tplSel').onchange=()=>applyTemplate($('tplSel').value);
+$('tplSave').onclick=()=>{const n=(prompt('Name this template:')||'').trim();if(!n)return;
+ const all=loadSaved();all[n]=getState();
+ if(!storeSaved(all))alert('Could not save in this browser. Use Export file instead.');fillTemplates('Saved|'+n)};
+$('tplExport').onclick=()=>{const blob=new Blob([JSON.stringify(getState(),null,1)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='chisandro-logo-template.json';a.click()};
+const tplFile=$('tplFile');$('tplImport').onclick=()=>tplFile.click();
+tplFile.onchange=async()=>{const f=tplFile.files[0];if(!f)return;
+ try{const st=JSON.parse(await f.text());setState(merge(DEF,st))}catch(e){alert('That file is not a template.')}tplFile.value=''};
+
+$('snap').onclick=()=>{renderer.render(scene,cam);const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download='chisandro-ac-logo.png';a.click()};
+// ---- direct manipulation: click a letter, then drag ----
+const MATS={A:[matA,matBar,matAcc],C:[matC]};
+let tool='move',selL=null,drag=null;
+const ray=new THREE.Raycaster(),ndc=new THREE.Vector2(),zplane=new THREE.Plane(new THREE.Vector3(0,0,1),0);
+const setNDC=e=>{const r=cv.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height)*2+1)};
+function worldAt(e){setNDC(e);ray.setFromCamera(ndc,cam);const p=new THREE.Vector3();ray.ray.intersectPlane(zplane,p);return p}
+function hit(e){setNDC(e);ray.setFromCamera(ndc,cam);const h=ray.intersectObjects([LET.A.grp,LET.C.grp],true)[0];if(!h)return null;
+ let o=h.object;while(o&&o!==LET.A.grp&&o!==LET.C.grp)o=o.parent;return o===LET.A.grp?'A':o===LET.C.grp?'C':null}
+function select(L){selL=L;for(const k in MATS)MATS[k].forEach(m=>m.emissive.set(k===L?0x303030:0x000000));
+ $('selname').textContent=L?'Selected: letter '+L:'Click a letter to select'}
+const setCtl=(L,k,v)=>{const el=CTL[L][k];el.value=Math.min(+el.max,Math.max(+el.min,v))};
+cv.addEventListener('pointerdown',e=>{if(VIEW)return;const L=hit(e);if(!L)return;select(L);orbit.enabled=false;cv.setPointerCapture(e.pointerId);
+ const st=getState()[L];drag={L,x0:e.clientX,y0:e.clientY,st,w0:worldAt(e)}},true);
+cv.addEventListener('pointermove',e=>{
+ if(!drag){const L=hit(e);cv.style.cursor=L?(tool==='move'?'move':tool==='stretch'?'nwse-resize':'grab'):'';return}
+ const {L,st}=drag,dx=e.clientX-drag.x0,dy=e.clientY-drag.y0;
+ if(tool==='move'){const w=worldAt(e);setCtl(L,'x',st.x+(w.x-drag.w0.x)/S);setCtl(L,'y',st.y+(w.y-drag.w0.y)/S)}
+ else if(tool==='stretch'){setCtl(L,'sx',st.sx+dx*.4);setCtl(L,'sy',st.sy-dy*.4)}
+ else setCtl(L,'r',st.r+dx*.4);
+ layout()});
+const endDrag=()=>{if(drag){drag=null;orbit.enabled=true}};
+cv.addEventListener('pointerup',endDrag);cv.addEventListener('pointercancel',endDrag);
+addEventListener('keydown',e=>{if(!selL||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;
+ const st=getState()[selL],n=e.shiftKey?25:5;let ok=true;
+ if(e.key==='ArrowLeft')setCtl(selL,'x',st.x-n);else if(e.key==='ArrowRight')setCtl(selL,'x',st.x+n);
+ else if(e.key==='ArrowUp')setCtl(selL,'y',st.y+n);else if(e.key==='ArrowDown')setCtl(selL,'y',st.y-n);else ok=false;
+ if(ok){e.preventDefault();layout()}});
+document.querySelectorAll('#tools button').forEach(b=>b.onclick=()=>{tool=b.dataset.t;
+ document.querySelectorAll('#tools button').forEach(x=>x.classList.toggle('on',x===b))});
+select(null);
+
+$('svgC').onclick=()=>download('chisandro-logo-custom.svg',buildSVG(getState(),false),'image/svg+xml');
+$('svgW').onclick=()=>download('chisandro-logo-custom-white.svg',buildSVG(getState(),true),'image/svg+xml');
+let hid=false;$('hide').onclick=()=>{hid=!hid;for(const c of $('ui').children)if(c.tagName!=='H1')c.style.display=hid?'none':'';$('hide').textContent=hid?'Show':'Hide'};
+$('rst').onclick=()=>{group.rotation.set(0,0,0);$('spin').checked=false;setState(clone(DEF))};
+function size(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);cam.aspect=w/h;const tn=2*Math.tan(cam.fov*Math.PI/360);cam.position.z=Math.max(14,20/(tn*(w/h)),VIEW?17/tn:0);cam.updateProjectionMatrix()}
+addEventListener('resize',size);size();
+fillDesigns();fillTemplates('Built-in|Current logo');setState(clone(DEF));
+if(VIEW){['ui','tools','hint'].forEach(i=>{$(i).style.display='none'});orbit.enableZoom=false;orbit.enablePan=false;
+ setState(merge(DEF,{A:{col:'#FFFFFF',fin:'gloss',depth:36},C:{fin:'gloss',depth:36},bg:'#'+(QS.get('bg')||'1f232b'),shad:0}));$('spin').checked=true;group.position.y=1.1}
+let t=0;
+renderer.setAnimationLoop(()=>{ if($('spin').checked){t+=.012;group.rotation.y=Math.sin(t)*.5;group.rotation.x=Math.sin(t*.7)*.08}
+ group.updateMatrixWorld(true);
+ const ref=LET.A.clipMesh;
+ if(ref&&localPlanes.length){ref.updateMatrixWorld(true);localPlanes.forEach((p,i)=>{planesRed[i].copy(p).applyMatrix4(ref.matrixWorld);planesGrey[i].copy(p).applyMatrix4(ref.matrixWorld)})}
+ orbit.update();renderer.render(scene,cam)});
+</script></body></html>
