@@ -1,5 +1,5 @@
 :root{
- --page:#D9DBE0;--tile:#ECEDF0;--ink:#1F232B;--soft:#4A505C;--slate:#3B4252;--deep:#2B303B;--red:#E31E24;--white:#fff;
+ --page:#D9DBE0;--tile:#ECEDF0;--ink:#1F232B;--soft:#4A505C;--slate:#4B4B48;--deep:#2B303B;--red:#A3191C;--white:#fff;
  --m:8px;--g:8px;
  --step-small:clamp(1rem,.95rem + .1vw,1.0625rem);
  --step-body:clamp(1.0625rem,1rem + .25vw,1.1875rem);
@@ -30,7 +30,7 @@ h3{font-size:var(--step-lead);line-height:1.1;letter-spacing:-.015em;font-weight
 .hero{height:100svh;min-height:640px;grid-template-rows:60px 1fr 1fr;grid-template-columns:1fr 1fr}
 .bar{grid-column:1/-1;display:grid;grid-template-columns:112px 1fr auto;gap:var(--g)}
 .bar>*{padding:0}
-.logo{background:var(--ink);display:flex;align-items:center;justify-content:center}.logo svg{width:90px;height:51px}
+.logo{background:#fff;display:flex;align-items:center;justify-content:center}.logo img{height:52px;width:auto;display:block}
 .links{background:var(--tile);display:flex;align-items:center;gap:28px;padding:0 24px;font-weight:500;font-size:var(--step-small)}
 .links a:hover{color:var(--red)}
 .act{background:var(--ink);color:#fff;display:flex;align-items:center;padding:0 24px;font-weight:700;font-size:var(--step-small)}.act:hover{background:var(--red)}
@@ -82,7 +82,7 @@ h3{font-size:var(--step-lead);line-height:1.1;letter-spacing:-.015em;font-weight
 .acc{display:flex;height:520px;margin:0 -24px -24px}
 .pn{flex:1 1 0;min-width:72px;position:relative;overflow:hidden;cursor:pointer;color:#fff;border:0;text-align:left;font:inherit;padding:0;transition:flex-grow .45s}
 .pn.on{flex-grow:8}
-.pn:nth-child(1){background:#1F232B}.pn:nth-child(2){background:#3B4252}.pn:nth-child(3){background:#7A808C;color:#fff}.pn:nth-child(4){background:#B6BAC3;color:var(--ink)}
+.pn:nth-child(1){background:#1F232B}.pn:nth-child(2){background:#4B4B48}.pn:nth-child(3){background:#7A808C;color:#fff}.pn:nth-child(4){background:#B6BAC3;color:var(--ink)}
 .pn .nm{position:absolute;left:20px;bottom:20px;font-weight:700;font-size:20px;writing-mode:vertical-rl;transform:rotate(180deg);transform-origin:center;white-space:nowrap}
 .pn .in{position:absolute;inset:0;padding:28px;display:flex;flex-direction:column;justify-content:space-between;opacity:0;transition:opacity .3s}
 .pn:not(.on) .in{visibility:hidden}.pn.on .in{opacity:1;transition-delay:.25s}.pn.on .nm{opacity:0}
